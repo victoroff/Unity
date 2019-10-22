@@ -7,15 +7,15 @@ public class PathFinding : MonoBehaviour
 {
     Grid grid;
     public Transform StartPosition;
-    public Transform TargedtPosition;
-
+    public Transform TargetPosition;
+      
     private void Awake()
     {
         grid = GetComponent<Grid>();
     }
     private void Update()
     {
-        FindPath(StartPosition.position,TargedtPosition.position);
+        FindPath(StartPosition.position,TargetPosition.position);
     }
 
     private void FindPath(Vector3 startPosition, Vector3 targetPosition)
@@ -30,7 +30,7 @@ public class PathFinding : MonoBehaviour
         while (openList.Count > 0)
         {
             Node currentNode = openList[0];
-            for (int i = 0; i < openList.Count; i++)
+            for (int i = 1; i < openList.Count; i++)
             {
                 if (openList[i].FCost < currentNode.FCost || openList[i].FCost == currentNode.FCost &&
                     openList[i].hCost < currentNode.hCost )
@@ -53,19 +53,42 @@ public class PathFinding : MonoBehaviour
                 {
                     continue;
                 }
-                int moveCost = currentNode.gCost + GetmanhattenDistance(currentNode,neighborNode);    
+                int moveCost = currentNode.gCost + GetManhattenDistance(currentNode,neighborNode);
+
+                if (moveCost < neighborNode.gCost || !openList.Contains(neighborNode))
+                {
+                    neighborNode.gCost = moveCost;
+                    neighborNode.hCost = GetManhattenDistance(neighborNode, targetNode);
+                    neighborNode.Parent = currentNode;
+
+                    if (!openList.Contains(neighborNode))
+                    {
+                        openList.Add(neighborNode);
+                    }
+                }
             }
         }
     }
 
-    private int GetmanhattenDistance(Node currentNode, Node neighborNode)
+    private int GetManhattenDistance(Node currentNode, Node neighborNode)
     {
-        throw new NotImplementedException();
+        int x = Mathf.Abs(currentNode.gridX - neighborNode.gridX);
+        int y = Mathf.Abs(currentNode.gridY - neighborNode.gridY);
+        return x + y;
     }
 
-    private void GetFinalPath(Node startNode, Node targetNode)
+    private void GetFinalPath(Node startingNode, Node targetNode)
     {
-        int x = Mathf.Abs(startNode.gridX - targetNode.gridX);
-        int y = Mathf.Abs(startNode.y - targetNode.gridY);
+        List<Node> FinalPath = new List<Node>();
+        Node currentNode = targetNode;
+
+        while (currentNode != startingNode)
+        {
+            FinalPath.Add(currentNode);
+            currentNode = currentNode.Parent;
+        }
+
+        FinalPath.Reverse();
+        grid.FinalPath = FinalPath;
     }
 }

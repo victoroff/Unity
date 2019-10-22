@@ -25,35 +25,23 @@ public class Grid : MonoBehaviour
         CreateGrid();
     }
 
-    public Node NodeFromWorldPosition(Vector3 worldPosition)
-    {
-        float xPoint = ((worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x);
-        float yPoint = ((worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y);
-
-        xPoint = Mathf.Clamp01(xPoint);
-        yPoint = Mathf.Clamp01(yPoint);
-
-        int x = Mathf.RoundToInt((gridSizeX - 1) * xPoint);
-        int y = Mathf.RoundToInt((gridSizeY - 1) * yPoint);
-
-        return grid[x, y];
-    }
-
     private void CreateGrid()
     {
         grid = new Node[gridSizeX,gridSizeY];
         Vector3 bottomleft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
-        for (int y = 0; y < gridSizeX; y++)
+        for (int x = 0; x < gridSizeX; x++)
         {
-            for (int x = 0; x < gridSizeX; x++)
+            for (int y = 0; y < gridSizeY; y++)
             {
-                Vector3 worldPoint = bottomleft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y*nodeDiameter + nodeRadius);
+                Vector3 worldPoint = bottomleft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
+
                 bool Wall = true;
                 if (Physics.CheckSphere(worldPoint,nodeRadius,wallMask))
                 {
                     Wall = false;
                 }
-                grid[y, x] = new Node(Wall,worldPoint,x,y);
+
+                grid[x,y] = new Node(Wall,worldPoint,x,y);
 
             }
         }
@@ -115,7 +103,7 @@ public class Grid : MonoBehaviour
     {
         Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
 
-        if (grid!=null)
+        if (grid != null)
         {
             foreach (Node node in grid)
             {
@@ -127,12 +115,33 @@ public class Grid : MonoBehaviour
                 {
                     Gizmos.color = Color.yellow;
                 }
+
                 if (FinalPath != null)
                 {
-                    Gizmos.color = Color.red;
+                    if (FinalPath.Contains(node))
+                    {
+                        Gizmos.color = Color.red;
+                    }
+                    
                 }
-                Gizmos.DrawCube(node.Position,Vector3.one*(nodeDiameter-Distance));    
+
+                Gizmos.DrawCube(node.Position,Vector3.one * (nodeDiameter - Distance));    
             }
         }
     }
+
+    public Node NodeFromWorldPosition(Vector3 worldPosition)
+    {
+        float xPoint = ((worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x);
+        float yPoint = ((worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y);
+
+        xPoint = Mathf.Clamp01(xPoint);
+        yPoint = Mathf.Clamp01(yPoint);
+
+        int x = Mathf.RoundToInt((gridSizeX - 1) * xPoint);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * yPoint);
+
+        return grid[x, y];
+    }
+
 }
