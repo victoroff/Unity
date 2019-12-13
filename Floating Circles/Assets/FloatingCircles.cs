@@ -139,38 +139,50 @@ public class FloatingCircles : MonoBehaviour
         //(x-r;x+r) and (y-r;y+r)
         int xMostLeft = (int)(x - radius);
         int xMostRight = (int)(x + radius);
-        var yPosition = y - radius;
+        //var yPosition = y - radius;
 
-        var surroundingCircles = circles.Where(c => c.Key > xMostLeft && c.Key < xMostRight).Select(mc => mc.Value).ToList();
+        var surroundingXs = circles.Where(c => c.Key > xMostLeft && c.Key < xMostRight).Select(mc => mc.Key).ToList();
 
-        if (surroundingCircles.Count != 0)
+        if (surroundingXs.Count == 0)
         {
-            Debug.Log(surroundingCircles);
+            
             return false;
+        }
+
+        foreach (var surroundingX in surroundingXs)
+        {
+            foreach (var surroundingY in circles[surroundingX])
+            {
+                if (Vector2.Distance(new Vector2(x, y), new Vector2(surroundingX, surroundingY)) < radius * 2)
+                {
+
+                    return true;
+                }
+            }
         }
         
 
-        for (int i = xMostLeft; i < xMostRight; i++)
-        {
+        //for (int i = xMostLeft; i < xMostRight; i++)
+        //{
 
-            //if one of the points does not have circle we don't need to check it
-            if (!circles.ContainsKey(i))
-            {
-                continue;
-            }
-            else if (circles[x].Contains(y))
-            {
-                return true;
-            }
+        //    //if one of the points does not have circle we don't need to check it
+        //    if (!circles.ContainsKey(i))
+        //    {
+        //        continue;
+        //    }
+        //    else if (circles[x].Contains(y))
+        //    {
+        //        return true;
+        //    }
 
 
-            if (Vector2.Distance(new Vector2(i, yPosition), new Vector2(x, y)) < radius * 2)
-            {
+        //    if (Vector2.Distance(new Vector2(i, yPosition), new Vector2(x, y)) < radius * 2)
+        //    {
 
-                return true;
-            }
-            yPosition++;
-        }
+        //        return true;
+        //    }
+        //    yPosition++;
+        //}
         return false;
     }
 
