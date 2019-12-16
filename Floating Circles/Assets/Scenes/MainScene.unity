@@ -197,7 +197,7 @@ Transform:
   m_GameObject: {fileID: 362824986}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.763, y: -13.876, z: 0}
-  m_LocalScale: {x: 25.53112, y: 10.112531, z: 1}
+  m_LocalScale: {x: 25.53112, y: 27.354395, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -316,8 +316,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rectangle: {fileID: 362824986}
-  MaxCircles: 60
-  radius: 0.5
+  MaxCircles: 400
+  radius: 0.207
   circlePrefab: {fileID: 7165890010195025000, guid: 595d4b9e29702be4f8d3ee9b054d1373,
     type: 3}
 --- !u!4 &1778422814

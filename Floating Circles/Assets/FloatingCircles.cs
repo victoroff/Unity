@@ -107,6 +107,7 @@ public class FloatingCircles : MonoBehaviour
             
             float rndX = Random.Range(Rectangle.transform.position.x + radius, Rectangle.transform.position.x  + Rectangle.transform.localScale.x - radius);
             float rndY = Random.Range(Rectangle.transform.position.y + radius, Rectangle.transform.position.y  + Rectangle.transform.localScale.y - radius);
+
             Debug.Log("rndx: " + rndX + "; rndY: " + rndY);
             //if (rndX == 0)
             //{
@@ -159,8 +160,10 @@ public class FloatingCircles : MonoBehaviour
         //we need to check around the circle position
         //(x-r;x+r) and (y-r;y+r)
         var diameter = radius * 2;
-        int xMostLeft = /*(int)(x - diameter)*/ (int)Mathf.Floor(x - diameter);
-        int xMostRight = /*(int)(x + diameter)*/ (int)Mathf.Round(x + diameter);
+        //int xMostLeft = /*(int)(x - diameter)*/ (int)Mathf.Floor(x - diameter);
+        //int xMostRight = /*(int)(x + diameter)*/ (int)Mathf.Round(x + diameter);
+        float xMostLeft = x - diameter;
+        float xMostRight = x + diameter;
         //var yPosition = y - radius;
         Debug.Log("mostLeft: " + xMostLeft + " mostRight: " + xMostRight);
         var surroundingXs = circles.Where(c => c.Key >= xMostLeft && c.Key <= xMostRight).Select(mc => mc.Key).ToList();
