@@ -97,13 +97,33 @@ public class FloatingCircles : MonoBehaviour
         // var rectanglePos = Camera.main.WorldToScreenPoint(Rectangle.transform.position);
         //  Debug.Log(rectanglePos.x + ":x\\y:" + rectanglePos.y);
 
+        //testing
+        //float rndX = 0;
+        //float rndY = 0;
+
         for (int i = 0; i < MaxCircles; i++)
         {
 
-
+            
             float rndX = Random.Range(Rectangle.transform.position.x + radius, Rectangle.transform.position.x  + Rectangle.transform.localScale.x - radius);
             float rndY = Random.Range(Rectangle.transform.position.y + radius, Rectangle.transform.position.y  + Rectangle.transform.localScale.y - radius);
-
+            Debug.Log("rndx: " + rndX + "; rndY: " + rndY);
+            //if (rndX == 0)
+            //{
+            //    rndX = -5.044736f;
+            //}
+            //else
+            //{
+            //    rndX = -4.725749f;
+            //}
+            //if (rndY == 0)
+            //{
+            //    rndY = -1.041708f;
+            //}
+            //else
+            //{
+            //    rndY = -1.302907f;
+            //}
             if (SafeToSpawn(circles, rndX, rndY))
             {
                 if (!circles.ContainsKey(rndX))
@@ -119,7 +139,7 @@ public class FloatingCircles : MonoBehaviour
             }
             else
             {
-                i--;
+                i-=1;
             }
             //PopulateCirclesOnScreen();
         }
@@ -139,12 +159,12 @@ public class FloatingCircles : MonoBehaviour
         //we need to check around the circle position
         //(x-r;x+r) and (y-r;y+r)
         var diameter = radius * 2;
-        int xMostLeft = (int)(x - diameter);
-        int xMostRight = (int)(x + diameter);
+        int xMostLeft = /*(int)(x - diameter)*/ (int)Mathf.Floor(x - diameter);
+        int xMostRight = /*(int)(x + diameter)*/ (int)Mathf.Round(x + diameter);
         //var yPosition = y - radius;
-
-        var surroundingXs = circles.Where(c => c.Key > xMostLeft && c.Key < xMostRight).Select(mc => mc.Key).ToList();
-
+        Debug.Log("mostLeft: " + xMostLeft + " mostRight: " + xMostRight);
+        var surroundingXs = circles.Where(c => c.Key >= xMostLeft && c.Key <= xMostRight).Select(mc => mc.Key).ToList();
+        
         if (surroundingXs.Count == 0)
         {
             
@@ -153,9 +173,12 @@ public class FloatingCircles : MonoBehaviour
 
         foreach (float surroundingX in surroundingXs)
         {
+            Debug.Log(">surrX: " + surroundingX);
+            Debug.Log(">>>surrY: " + System.String.Join(", ",circles[surroundingX]));
             foreach (float surroundingY in circles[surroundingX])
             {
-                Debug.Log(Vector2.Distance(new Vector2(x, y), new Vector2(surroundingX, surroundingY)));
+                
+                //Debug.Log(Vector2.Distance(new Vector2(x, y), new Vector2(surroundingX, surroundingY)));
                 //if(Mathf.Sqrt(Mathf.Pow(surroundingX - x,2) + Mathf.Pow(surroundingY - y,2)) < diameter)
                 if (Vector2.Distance(new Vector2(x, y), new Vector2(surroundingX, surroundingY)) < diameter)
                 {
