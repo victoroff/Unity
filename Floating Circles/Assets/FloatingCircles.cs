@@ -18,13 +18,15 @@ public class FloatingCircles : MonoBehaviour
     public float radius;
     public Transform circlePrefab;
 
-    //void Awake()
-    //{
-    //    sr = GetComponent<SpriteRenderer>();
-    //    sr.color = color;
+    private List<Transform> spawnedCircles;
+    void Awake()
+    {
+       
+        //sr = GetComponent<SpriteRenderer>();
+        //sr.color = color;
 
-    //    // transform.position = new Vector3(0f, 0f, 0.0f);
-    //}
+        // transform.position = new Vector3(0f, 0f, 0.0f);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,8 @@ public class FloatingCircles : MonoBehaviour
 
         //with dict
         var circles = new Dictionary<float, List<float>>();
+        //for moving circles 
+        spawnedCircles = new List<Transform>();
         GenerateCircles(circles);
         //   Debug.Log(rectSprite.rect.x + "/" + rectSprite.rect.y);
         //foreach (var circle in circles)
@@ -55,11 +59,23 @@ public class FloatingCircles : MonoBehaviour
 
 
 
-    void Update()
+    void FixedUpdate()
     {
-
+        if (spawnedCircles.Count > 0)
+        {
+            MoveCircles();
+        }
     }
-    
+
+    private void MoveCircles()
+    {
+        //move all spawned circles 
+        foreach (var spawnedCircle in spawnedCircles)
+        {
+            //how to move circles around
+        }
+    }
+
     //generate circles using List
     //private void GenerateCircles(List<Vector2> circles)
     //{
@@ -91,6 +107,7 @@ public class FloatingCircles : MonoBehaviour
 
     private void GenerateCircles(Dictionary<float, List<float>> circles)
     {
+
         circlePrefab.localScale = new Vector3(radius * 2, radius * 2, 0);
 
         //rectangle position on screen
@@ -135,8 +152,9 @@ public class FloatingCircles : MonoBehaviour
 
                 // var circlePos = Camera.main.ViewportToWorldPoint(new Vector3(position.x,position.y, 1));
                 var position = new Vector3(rndX, rndY,Rectangle.transform.position.z - 1);
-           //     Debug.Log(position);
-                Instantiate(circlePrefab, position, Quaternion.identity);
+                
+                var spawnedCircle = Instantiate(circlePrefab, position, Quaternion.identity);
+                spawnedCircles.Add(spawnedCircle);
             }
             else
             {
